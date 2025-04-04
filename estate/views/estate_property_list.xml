@@ -1,10 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="state_property_list_view" model="ir.ui.view">
-        <field name="name">state.property.list</field>
-        <field name="model">state.property</field>
+        <record id="estate_property_list_view" model="ir.ui.view">
+        <field name="name">estate.property.list</field>
+        <field name="model">estate.property</field>
         <field name="arch" type="xml">
-            <list string="State Properties">
+            <list string="Estate Properties">
                 <field name="name"/>
                 <field name="postcode"/>
                 <field name="bedrooms"/>

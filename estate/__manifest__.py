@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "State",
+    'name': "Estate",
 
     'summary': "Short (1 phrase/line) summary of the module's purpose",
 
@@ -18,10 +18,11 @@
 
     'data': [
         'security/ir.model.access.csv',
-        'views/estate_property_views.xml',
-        'views/estate_menus.xml',
         'views/estate_property_list.xml',
         'views/estate_property_form.xml',
+        'views/estate_property_search.xml',
+        'views/estate_property_views.xml',
+        'views/estate_menus.xml',
     ],
     'demo': [
         'demo/demo.xml',

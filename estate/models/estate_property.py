@@ -8,7 +8,6 @@ class Property(models.Model):
         string='Nombre de la Propiedad',
         required=True,
         index=True,
-        tracking=True,
         help='Nombre oficial de la propiedad inmobiliaria'
     )
 
@@ -34,16 +33,14 @@ class Property(models.Model):
     expected_price = fields.Float(
         string='Precio Esperado',
         digits='Product Price',
-        required=True,
-        tracking=True
+        required=True
     )
 
     selling_price = fields.Float(
         string='Precio de Venta',
         digits='Product Price',
         readonly=True,
-        copy=False,
-        tracking=True
+        copy=False
     )
 
     bedrooms = fields.Integer(
