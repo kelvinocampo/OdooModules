@@ -8,6 +8,9 @@
             <menuitem id="second_level_menu" name="Property Type">
                 <menuitem id="estate_property_type_menu_action" action="estate_property_type_action" />
             </menuitem>
+            <menuitem id="third_level_menu" name="Property Tag">
+                <menuitem id="estate_property_tag_menu_action" action="estate_property_tag_action" />
+            </menuitem>
         </menuitem>
     </data>
 </odoo>
