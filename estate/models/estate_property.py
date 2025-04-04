@@ -2,7 +2,7 @@ from odoo import models, fields
 
 class Property(models.Model):
     _name = "estate.property"
-    _description = "CRM Recurring revenue plans"
+    _description = "Properties "
 
     name = fields.Char(
         string='Nombre de la Propiedad',
@@ -103,3 +103,5 @@ class Property(models.Model):
         copy=False,
         help='Estado de la propiedad'
     )
+    
+    property_type_id= fields.Many2one("estate.property.type", string="Type")
