@@ -2,7 +2,7 @@ from odoo import models, fields
 
 class PropertyOffer(models.Model):
     _name = "estate.property.offer"
-    _description = "Properties "
+    _description = "Offers Properties"
 
     price = fields.Float(
         string='Precio',
@@ -10,13 +10,13 @@ class PropertyOffer(models.Model):
     )
 
     status = fields.Selection(
-        string='Orientación del Jardín',
+        string='Estado',
         selection=[
             ('Accepted', 'Accepted'),
             ('Refused', 'Refused'),
         ],
         copy=False,
-        help='Orientación cardinal principal del jardín'
+        help='Estado de la oferta'
     )
     
     property_id = fields.Many2one('estate.property', string='Property', index=True, required=True)

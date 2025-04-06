@@ -19,6 +19,7 @@
     'data': [
         'security/ir.model.access.csv',
         'views/property_offer/estate_property_offer_list.xml',
+        'views/property_offer/estate_property_offer_form.xml',
         'views/property_type/estate_property_type_list.xml',
         'views/property_type/estate_property_type_form.xml',
         'views/property_tag/estate_property_tag_form.xml',

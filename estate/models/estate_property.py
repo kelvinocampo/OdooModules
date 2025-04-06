@@ -106,9 +106,9 @@ class Property(models.Model):
     
     property_type_id= fields.Many2one("estate.property.type", string="Type")
     
-    buyer = fields.Many2one('res.users', string='Buyer', index=True, tracking=True)
-    salesperson = fields.Many2one('res.partner', string='Salesperson', index=True, tracking=True, default=lambda self: self.env.user)
+    buyer = fields.Many2one('res.users', string='Buyer', index=True)
+    salesperson = fields.Many2one('res.partner', string='Salesperson', index=True, default=lambda self: self.env.user)
     
     tags_ids = fields.Many2many("estate.property.tag", string='Tags')
-
+    
     offer_ids = fields.One2many('estate.property.offer','property_id', string='Offer')

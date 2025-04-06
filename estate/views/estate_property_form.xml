@@ -41,13 +41,13 @@
                             </page>
                             <page string="Offers">
                                 <group>
-                                    <field name="salesperson" />
-                                    <field name="buyer" />
+                                    <field name="offer_ids" nolabel="1" />
                                 </group>
                             </page>
                             <page string="Other Info">
                                 <group>
-                                    <field name="offer_ids" />
+                                    <field name="salesperson" />
+                                    <field name="buyer" />
                                 </group>
                             </page>
                         </notebook>

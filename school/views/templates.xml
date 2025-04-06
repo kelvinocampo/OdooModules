@@ -1,6 +1,6 @@
 <odoo>
   <data>
-    <!-- Vista Tree (Lista) - CORRECTED -->
+    <!-- Vista list (Lista) - CORRECTED -->
     <record id="student_list_view" model="ir.ui.view">
       <field name="name">student.list</field>
       <field name="model">school.student</field>
