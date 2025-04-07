@@ -10,3 +10,7 @@ class PropertyType(models.Model):
         index=True,
         help='Nombre del tipo de la propiedad inmobiliaria'
     )
+
+    _sql_constraints = [
+        ('check_name', 'unique(name)', 'The type must be unique.')
+    ]

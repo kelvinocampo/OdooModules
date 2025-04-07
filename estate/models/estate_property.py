@@ -1,4 +1,5 @@
 from odoo import api, models, fields
+from odoo.exceptions import UserError
 
 class Property(models.Model):
     _name = "estate.property"
@@ -96,6 +97,11 @@ class Property(models.Model):
     offer_ids = fields.One2many('estate.property.offer','property_id', string='Offer')
     total_area = fields.Float(compute="_compute_total_area", string="Total Area", store=True)
     best_price = fields.Float(compute="_compute_best_price", string="Best Offer", store=True)
+
+    _sql_constraints = [
+        ('check_expected_price', 'CHECK(expected_price >=0)', 'The expected price must a positive number.'),
+        ('check_selling_price', 'CHECK(selling_price >=0 OR selling_price=null)', 'The selling price must a positive number.'),
+    ]
     
     @api.depends("garden_area","living_area")
     def _compute_total_area(self):
@@ -122,3 +128,15 @@ class Property(models.Model):
             else:
                 record.garden_area=0
                 record.garden_orientation=False
+
+    def action_cancel_property(self):
+        for record in self:
+            if record.state == 'Sold':
+                raise UserError(_('A Sold property can not be canceled.'))
+        return self.write({'state': 'Cancelled'})
+    
+    def action_sold_property(self):
+        for record in self:
+            if record.state == 'Cancelled':
+                raise UserError(_('A Cancelled property can not be sold.'))
+        return self.write({'state': 'sold'})

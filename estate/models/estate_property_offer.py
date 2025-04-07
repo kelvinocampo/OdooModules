@@ -1,5 +1,6 @@
 from odoo import models, api, fields
 from datetime import timedelta
+from odoo.exceptions import UserError, ValidationError
 
 class PropertyOffer(models.Model):
     _name = "estate.property.offer"
@@ -22,6 +23,17 @@ class PropertyOffer(models.Model):
         string="Deadline"
     )
 
+    _sql_constraints = [
+        ('check_price', 'CHECK(price >=0)', 'The price must a positive number.')
+    ]
+
+    # A Terminar
+    @api.constrains('price')
+    def _check_price(self):
+        for record in self:
+            if (100 * float(record.price)/float(record.property_id.expected_price)) < 90:
+                raise ValidationError("The offer price should be atleast 90% of the expected price.")
+
     @api.depends('create_date', 'validity')
     def _compute_date_deadline(self):
         for offer in self:
@@ -38,3 +50,26 @@ class PropertyOffer(models.Model):
                 offer.validity = (offer.date_deadline - create_date).days
             elif offer.date_deadline:
                 offer.validity = (offer.date_deadline - fields.Date.today()).days
+
+    def action_accept(self):
+        if "Accepted" in self.mapped("property_id.offer_ids.state"):
+            raise UserError("An offer has already been accepted.")
+        self.write(
+            {
+                "state": "Accepted",
+            }
+        )
+        return self.mapped("property_id").write(
+            {
+                "state": "Offer Accepted",
+                "selling_price": self.price,
+                "buyer": self.partner_id.id,
+            }
+        )
+
+    def action_refuse(self):
+        return self.write(
+            {
+                "status": "Refused",
+            }
+        )

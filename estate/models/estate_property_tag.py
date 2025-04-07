@@ -10,3 +10,7 @@ class PropertyTag(models.Model):
         index=True,
         help='Etiqueta/Caracteristica de la propiedad inmobiliaria'
     )
+
+    _sql_constraints = [
+        ('check_name', 'unique(name)', 'The tag must be unique.')
+    ]
