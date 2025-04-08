@@ -24,6 +24,7 @@ class Property(models.Model):
     date_availability = fields.Date(
         string='Fecha Disponible',
         copy=False,
+        required=False,
         default=lambda self: fields.Date.add(fields.Date.today(), months=3),
         help='Fecha cuando la propiedad estará disponible'
     )
