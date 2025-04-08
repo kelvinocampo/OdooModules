@@ -15,7 +15,6 @@
                         invisible="status in ['Accepted','Refused']" />
                     <button name="action_refuse" string="Refuse" type="object" icon="fa-close"
                         invisible="status in ['Accepted','Refused']" />
-                    <field name="status" />
                 </list>
             </field>
         </record>
