@@ -91,8 +91,8 @@ class Property(models.Model):
         help='Estado de la propiedad'
     )
     property_type_id= fields.Many2one("estate.property.type", string="Type")
-    buyer = fields.Many2one('res.users', string='Buyer', index=True)
-    salesperson = fields.Many2one('res.partner', string='Salesperson', index=True, default=lambda self: self.env.user)
+    buyer = fields.Many2one('res.partner', string='Buyer', index=True)
+    salesperson = fields.Many2one('res.users', string='Salesperson', index=True, default=lambda self: self.env.user)
     tags_ids = fields.Many2many("estate.property.tag", string='Tags')
     offer_ids = fields.One2many('estate.property.offer','property_id', string='Offer')
     total_area = fields.Float(compute="_compute_total_area", string="Total Area", store=True)
@@ -132,11 +132,13 @@ class Property(models.Model):
     def action_cancel_property(self):
         for record in self:
             if record.state == 'Sold':
-                raise UserError(_('A Sold property can not be canceled.'))
+                raise UserError('A Sold property can not be canceled.')
         return self.write({'state': 'Cancelled'})
     
     def action_sold_property(self):
         for record in self:
             if record.state == 'Cancelled':
-                raise UserError(_('A Cancelled property can not be sold.'))
-        return self.write({'state': 'sold'})
+                raise UserError('No puedes vender una propiedad cancelada')
+            if not any(offer.status == 'Accepted' for offer in record.offer_ids):
+                raise UserError('Debes aceptar una oferta antes de marcar como vendida')
+        return self.write({'state': 'Sold'})

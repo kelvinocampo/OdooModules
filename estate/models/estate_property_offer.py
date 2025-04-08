@@ -1,6 +1,7 @@
 from odoo import models, api, fields
 from datetime import timedelta
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools.float_utils import float_compare, float_is_zero
 
 class PropertyOffer(models.Model):
     _name = "estate.property.offer"
@@ -27,13 +28,15 @@ class PropertyOffer(models.Model):
         ('check_price', 'CHECK(price >=0)', 'The price must a positive number.')
     ]
 
-    # A Terminar
     @api.constrains('price')
     def _check_price(self):
-        for record in self:
-            if (100 * float(record.price)/float(record.property_id.expected_price)) < 90:
-                raise ValidationError("The offer price should be atleast 90% of the expected price.")
-
+        for offer in self:
+            if float_is_zero(offer.property_id.expected_price, precision_digits=2):
+                continue
+            min_price = offer.property_id.expected_price * 0.9
+            if float_compare(offer.price, min_price, precision_digits=2) < 0:
+                raise ValidationError(f"El precio de la oferta debe ser al menos 90% del precio esperado (Mínimo: {min_price})")
+    
     @api.depends('create_date', 'validity')
     def _compute_date_deadline(self):
         for offer in self:
@@ -50,22 +53,19 @@ class PropertyOffer(models.Model):
                 offer.validity = (offer.date_deadline - create_date).days
             elif offer.date_deadline:
                 offer.validity = (offer.date_deadline - fields.Date.today()).days
-
+    
     def action_accept(self):
-        if "Accepted" in self.mapped("property_id.offer_ids.state"):
-            raise UserError("An offer has already been accepted.")
-        self.write(
-            {
-                "state": "Accepted",
-            }
-        )
-        return self.mapped("property_id").write(
-            {
-                "state": "Offer Accepted",
-                "selling_price": self.price,
-                "buyer": self.partner_id.id,
-            }
-        )
+        for offer in self:
+            if offer.property_id.state in ('Sold', 'Cancelled'):
+                raise UserError("No se puede aceptar una oferta en propiedades vendidas o canceladas")
+            if "Accepted" in offer.property_id.offer_ids.mapped('status'):
+                raise UserError("Ya hay una oferta aceptada")
+        self.write({'status': 'Accepted'})
+        return self.property_id.write({
+            'state': 'Offer Accepted',
+            'selling_price': self.price,
+            'buyer': self.partner_id.id
+        })
 
     def action_refuse(self):
         return self.write(
