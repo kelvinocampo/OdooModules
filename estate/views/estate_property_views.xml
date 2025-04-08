@@ -24,18 +24,23 @@
       <field name="arch" type="xml">
         <form string="Property Form">
           <header>
-            <button name="action_cancel_property" string="Cancel" type="object" />
-            <button name="action_sold_property" string="Sold" type="object" />
+            <button name="action_cancel_property" string="Cancel" type="object"
+              invisible="state in ['Sold', 'Cancelled']" />
+            <button name="action_sold_property" string="Sold" type="object"
+              invisible="state in ['Sold', 'Cancelled']" />
+            <field name="state" widget="statusbar"
+              statusbar_visible="New,Offer Received,Offer Accepted,Sold" />
           </header>
           <sheet>
             <h1>
               <field name="name" />
             </h1>
-            <field name="tags_ids" widget="many2many_tags" />
+            <field name="tags_ids" widget="many2many_tags"
+              options="{'color_field': 'color', 'no_create': True}" />
 
             <group>
               <group>
-                <field name="property_type_id" />
+                <field name="property_type_id" options="{'no_create': True, 'no_edit': True}" />
                 <field name="postcode" />
                 <field name="date_availability" />
               </group>
@@ -56,14 +61,15 @@
                   <field name="facades" />
                   <field name="garage" />
                   <field name="garden" />
-                  <field name="garden_area" />
-                  <field name="garden_orientation" />
+                  <field name="garden_area" invisible="not garden" />
+                  <field name="garden_orientation" invisible="not garden" />
                   <field name="total_area" />
                 </group>
               </page>
               <page string="Offers">
                 <group>
-                  <field name="offer_ids" nolabel="1" />
+                  <field name="offer_ids"
+                    readonly="state in ['Offer Accepted', 'Sold', 'Cancelled']" nolabel="1" />
                 </group>
               </page>
               <page string="Other Info">
