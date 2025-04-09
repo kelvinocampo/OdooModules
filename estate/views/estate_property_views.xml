@@ -10,12 +10,14 @@
           string="Estate Properties">
           <field name="name" />
           <field name="postcode" />
+          <field name="tags_ids" widget="many2many_tags"
+            options="{'color_field': 'color', 'no_create': True}" />
           <field name="bedrooms" />
           <field name="living_area" />
           <field name="expected_price" />
           <field name="selling_price" />
           <field name="date_availability" optional="hide" />
-          <field name="postcode" />
+          <field name="state" optional="hide" />
         </list>
       </field>
     </record>
@@ -86,8 +88,8 @@
       </field>
     </record>
 
-    <record id="estate_property_view_search" model="ir.ui.view">
-      <field name="name">estate.property.view.search</field>
+    <record id="estate_property_search_view" model="ir.ui.view">
+      <field name="name">estate.property.search</field>
       <field name="model">estate.property</field>
       <field name="arch" type="xml">
         <search>
@@ -101,6 +103,13 @@
             name="new_or_offer"
             string="New or Offer Received"
             domain="['|', ('state', '=', 'New'), ('state', '=', 'Offer Received')]"
+          />
+          <field name="living_area" string="Minimum Living Area (m²)"
+            filter_domain="[('living_area', '>=', self)]" />
+          <filter
+            name="available"
+            string="Available"
+            domain="[('state','not in',['Sold','Cancelled'])]"
           />
           <group expand="0" string="Group By">
             <filter
@@ -117,6 +126,7 @@
       <field name="name">Properties</field>
       <field name="res_model">estate.property</field>
       <field name="view_mode">list,form</field>
+      <field name="context">{'search_default_available': True}</field>
     </record>
   </data>
 </odoo>
