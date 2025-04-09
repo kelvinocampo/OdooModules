@@ -146,6 +146,6 @@ class Property(models.Model):
     
     @api.ondelete(at_uninstall=False)
     def _check_property_state_before_delete(self):
-        for prop in self:
-            if prop.state not in ('new', 'cancelled'):
+        for record in self:
+            if record.state not in ('New', 'Cancelled'):
                 raise UserError('You cannot delete a property that is not in "New" or "Cancelled" state.')
