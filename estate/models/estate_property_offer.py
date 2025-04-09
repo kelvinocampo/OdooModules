@@ -75,19 +75,20 @@ class PropertyOffer(models.Model):
             }
         )
     
-    @api.model
-    def create(self, vals):
-        property_id = vals.get('property_id')
-        if property_id:
-            property_obj = self.env['estate.property'].browse(property_id)
-            
-            existing_offers = self.search([
-                ('property_id', '=', property_id),
-                ('price', '>', vals.get('price', 0))
-            ])
-            if existing_offers:
-                raise UserError('You cannot create an offer with a lower amount than existing offers.')
-            
-            property_obj.write({'state': 'offer_received'})
-            
-        return super(PropertyOffer, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            property_id = vals.get('property_id')
+            if property_id:
+                property_obj = self.env['estate.property'].browse(property_id)
+                
+                existing_offers = self.search([
+                    ('property_id', '=', property_id),
+                    ('price', '>', vals.get('price', 0))
+                ])
+                if existing_offers:
+                    raise UserError('You cannot create an offer with a lower amount than existing offers.')
+                
+                property_obj.write({'state': 'Offer Received'})
+                
+        return super(PropertyOffer, self).create(vals_list)
