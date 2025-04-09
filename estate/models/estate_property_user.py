@@ -1,4 +1,3 @@
-
 from odoo import models, fields
 
 class ResUsers(models.Model):
@@ -8,5 +7,5 @@ class ResUsers(models.Model):
         'estate.property',
         'salesperson',
         string='Properties',
-        domain=[('state', 'in', ['new', 'offer_received', 'offer_accepted'])] 
+        domain=[('state', 'in', ['New', 'Offer Received', 'Offer Accepted'])] 
     )
