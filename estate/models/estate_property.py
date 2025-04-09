@@ -143,3 +143,9 @@ class Property(models.Model):
             if not any(offer.status == 'Accepted' for offer in record.offer_ids):
                 raise UserError('Debes aceptar una oferta antes de marcar como vendida')
         return self.write({'state': 'Sold'})
+    
+    @api.ondelete(at_uninstall=False)
+    def _check_property_state_before_delete(self):
+        for prop in self:
+            if prop.state not in ('new', 'cancelled'):
+                raise UserError('You cannot delete a property that is not in "New" or "Cancelled" state.')
